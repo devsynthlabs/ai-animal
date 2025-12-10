@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis History - AI Animal Type Classification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="logo-icon">🐄</span>
+                <span class="logo-text">AI-ATC</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/history" class="nav-link active">History</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="page-title">Analysis History</h1>
+
+        {% if results %}
+        <div class="history-grid">
+            {% for report_id, report in results.items() %}
+            <div class="history-card glass-card">
+                <div class="history-card-header">
+                    <span class="animal-type-badge">{{ report.animal_info.type | capitalize }}</span>
+                    <span class="history-date">{{ report.generated_at[:10] }}</span>
+                </div>
+                <div class="history-card-body">
+                    <div class="history-breed">{{ report.animal_info.breed | capitalize }}</div>
+                    <div class="history-grade grade-{{ report.overall_grade | lower | replace(' ', '-') }}">
+                        {{ report.overall_grade }}
+                    </div>
+                    <div class="history-score">Score: {{ report.composites.final_composite }}</div>
+                </div>
+                <a href="/results/{{ report_id }}" class="history-card-link">View Details →</a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state glass-card">
+            <div class="empty-icon">📋</div>
+            <h2>No Analysis History</h2>
+            <p>Upload an animal image to get started with ATC classification</p>
+            <a href="/" class="btn btn-primary">Go to Dashboard</a>
+        </div>
+        {% endif %}
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Result - AI Animal Type Classification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="logo-icon">🐄</span>
+                <span class="logo-text">AI-ATC</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/history" class="nav-link">History</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content results-page">
+        <div class="results-header-bar">
+            <a href="/" class="back-link">&larr; Back to Dashboard</a>
+            <h1 class="page-title">Analysis Report</h1>
+            <span class="report-id">ID: {{ report.report_id }}</span>
+        </div>
+
+        <div class="results-layout">
+            <div class="image-panel glass-card">
+                {% if report.image_path %}
+                <img src="{{ url_for('static', filename='uploads/' ~ report.image_path) }}" alt="Analyzed animal"
+                    class="result-image"
+                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%231a1a2e%22 width=%22200%22 height=%22200%22/><text x=%2250%25%22 y=%2250%25%22 fill=%22%23666%22 text-anchor=%22middle%22 dy=%22.3em%22>Image</text></svg>'">
+                {% endif %}
+
+                <div class="animal-badge {{ report.animal_info.type }}">
+                    <span class="animal-type">{{ report.animal_info.type | capitalize }}</span>
+                    <span class="animal-breed">{{ report.animal_info.breed | capitalize }}</span>
+                </div>
+            </div>
+
+            <div class="details-panel">
+                <div class="overall-grade-card glass-card grade-{{ report.overall_grade | lower | replace(' ', '-') }}">
+                    <div class="grade-label">Overall Grade</div>
+                    <div class="grade-value">{{ report.overall_grade }}</div>
+                    <div class="composite-score">
+                        Composite Score: {{ report.composites.final_composite }}
+                    </div>
+                </div>
+
+                <div class="info-card glass-card">
+                    <h3>Animal Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Type</span>
+                            <span class="info-value">{{ report.animal_info.type | capitalize }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Breed</span>
+                            <span class="info-value">{{ report.animal_info.breed | capitalize }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Sex</span>
+                            <span class="info-value">{{ report.animal_info.sex | capitalize }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Image Quality</span>
+                            <span class="info-value">{{ report.image_assessment.quality | capitalize }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="scores-card glass-card">
+                    <h3>Structural Traits</h3>
+                    <div class="trait-list">
+                        {% for trait in report.scores.structural %}
+                        <div class="trait-item">
+                            <div class="trait-header">
+                                <span class="trait-name">{{ trait.trait_name }}</span>
+                                <span class="trait-score {% if trait.score %}score-{{ trait.score }}{% endif %}">
+                                    {{ trait.score if trait.score else 'N/A' }}
+                                </span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: {{ (trait.score or 5) * 11.11 }}%"></div>
+                            </div>
+                            <div class="trait-notes">{{ trait.notes }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if report.scores.udder %}
+                <div class="scores-card glass-card">
+                    <h3>Udder Traits</h3>
+                    <div class="trait-list">
+                        {% for trait in report.scores.udder %}
+                        <div class="trait-item">
+                            <div class="trait-header">
+                                <span class="trait-name">{{ trait.trait_name }}</span>
+                                <span class="trait-score {% if trait.score %}score-{{ trait.score }}{% endif %}">
+                                    {{ trait.score if trait.score else 'N/A' }}
+                                </span>
+                            </div>
+                            {% if trait.score %}
+                            <div class="score-bar">
+                                <div class="score-fill" style="width: {{ trait.score * 11.11 }}%"></div>
+                            </div>
+                            {% endif %}
+                            <div class="trait-notes">{{ trait.notes }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="assessment-card glass-card">
+                    <h3>Overall Assessment</h3>
+                    <p class="assessment-text">{{ report.assessment }}</p>
+
+                    {% if report.recommendations %}
+                    <h4>Recommendations</h4>
+                    <ul class="recommendations-list">
+                        {% for rec in report.recommendations %}
+                        <li>{{ rec }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <div class="actions-bar">
+                    <button class="btn btn-secondary" id="exportBtn" data-report-id="{{ report.report_id }}">
+                        📥 Export JSON
+                    </button>
+                    <button class="btn btn-primary" id="bpaBtn" data-report-id="{{ report.report_id }}">
+                        🚀 Submit to BPA
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('exportBtn').addEventListener('click', async function () {
+            const reportId = this.dataset.reportId;
+            const response = await fetch(`/export/${reportId}`);
+            const data = await response.json();
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `atc_report_${reportId}.json`;
+            a.click();
+        });
+
+        document.getElementById('bpaBtn').addEventListener('click', async function () {
+            const reportId = this.dataset.reportId;
+            const response = await fetch(`/submit-bpa/${reportId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            });
+            const result = await response.json();
+            alert(result.message);
+        });
+    </script>
+</body>
+
+</html>
