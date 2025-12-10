@@ -94,7 +94,9 @@ def upload_file():
     
     try:
         # Analyze the image
+        print(f"[DEBUG] Analyzing image: {filepath}")
         result = gemini.analyze_image(filepath)
+        print(f"[DEBUG] Analysis result: {result}")
         
         if result.get('error'):
             return jsonify({'error': result.get('message', 'Analysis failed')}), 500
@@ -114,6 +116,9 @@ def upload_file():
         })
         
     except Exception as e:
+        import traceback
+        print(f"[ERROR] Upload failed: {str(e)}")
+        print(traceback.format_exc())
         return jsonify({'error': str(e)}), 500
 
 
