@@ -84,7 +84,13 @@ def upload_file():
     # Get analyzer
     gemini, error = get_analyzer()
     if error:
-        return jsonify({'error': error}), 500
+        # Remove uploaded file since we can't process it
+        os.remove(filepath)
+        return jsonify({'error': f'API Key Error: {error}. Please add your GEMINI_API_KEY to the .env file.'}), 400
+    
+    if gemini is None:
+        os.remove(filepath)
+        return jsonify({'error': 'Gemini API key not configured. Create a .env file with GEMINI_API_KEY=your_key'}), 400
     
     try:
         # Analyze the image
