@@ -5,7 +5,7 @@ Main Flask Application
 
 import os
 import json
-from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from datetime import datetime
@@ -53,6 +53,12 @@ def get_analyzer():
 
 
 @app.route('/')
+def landing():
+    """Landing page."""
+    return render_template('landing.html')
+
+
+@app.route('/dashboard')
 def index():
     """Main dashboard page."""
     return render_template('index.html', 
@@ -180,6 +186,35 @@ def submit_to_bpa(report_id):
 def history():
     """View analysis history."""
     return render_template('history.html', results=analysis_results)
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    """Serve uploaded images."""
+    return send_from_directory(Config.UPLOAD_FOLDER, filename)
+
+
+@app.route('/test-history')
+def test_history():
+    """Test route to show history with sample data."""
+    # Create sample data for testing
+    sample_results = {
+        'test-001': {
+            'report_id': 'test-001',
+            'image_path': '20251212_153545_cow.jpg',
+            'animal_info': {
+                'type': 'cattle',
+                'breed': 'holstein',
+                'sex': 'female'
+            },
+            'overall_grade': 'Good',
+            'composites': {
+                'final_composite': 7.2
+            },
+            'generated_at': '2025-12-12T15:35:45'
+        }
+    }
+    return render_template('history.html', results=sample_results)
 
 
 if __name__ == '__main__':

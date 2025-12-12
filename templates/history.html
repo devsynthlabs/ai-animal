@@ -25,7 +25,8 @@
                 <span class="logo-text">AI-ATC</span>
             </a>
             <div class="nav-links">
-                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/" class="nav-link">Home</a>
+                <a href="/dashboard" class="nav-link">Dashboard</a>
                 <a href="/history" class="nav-link active">History</a>
             </div>
         </div>
@@ -38,6 +39,11 @@
         <div class="history-grid">
             {% for report_id, report in results.items() %}
             <div class="history-card glass-card">
+                {% if report.image_path %}
+                <div class="history-image">
+                    <img src="/uploads/{{ report.image_path }}" alt="Animal Image" loading="lazy">
+                </div>
+                {% endif %}
                 <div class="history-card-header">
                     <span class="animal-type-badge">{{ report.animal_info.type | capitalize }}</span>
                     <span class="history-date">{{ report.generated_at[:10] }}</span>
@@ -58,7 +64,7 @@
             <div class="empty-icon">📋</div>
             <h2>No Analysis History</h2>
             <p>Upload an animal image to get started with ATC classification</p>
-            <a href="/" class="btn btn-primary">Go to Dashboard</a>
+            <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
         </div>
         {% endif %}
     </main>

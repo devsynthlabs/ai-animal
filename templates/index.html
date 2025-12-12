@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Animal Type Classification</title>
-    <meta name="description" content="AI-powered Animal Type Classification for Cattle and Buffaloes using Gemini Vision API">
+    <meta name="description"
+        content="AI-powered Animal Type Classification for Cattle and Buffaloes using Gemini Vision API">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
     <div class="background-effects">
         <div class="gradient-orb orb-1"></div>
@@ -24,7 +28,8 @@
                 <span class="logo-text">AI-ATC</span>
             </a>
             <div class="nav-links">
-                <a href="/" class="nav-link active">Dashboard</a>
+                <a href="/" class="nav-link">Home</a>
+                <a href="/dashboard" class="nav-link active">Dashboard</a>
                 <a href="/history" class="nav-link">History</a>
             </div>
         </div>
@@ -44,10 +49,11 @@
             <div class="upload-card glass-card">
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
                         </svg>
                     </div>
                     <h3 class="upload-title">Upload Animal Image</h3>
@@ -85,7 +91,7 @@
 
                 <div class="results-content" id="resultsContent" style="display: none;">
                     <div class="animal-info" id="animalInfo"></div>
-                    
+
                     <div class="scores-grid">
                         <div class="scores-section">
                             <h3 class="section-title">Structural Traits</h3>
@@ -108,7 +114,8 @@
                         <button class="btn btn-secondary" id="exportBtn">
                             <span>📥 Export JSON</span>
                         </button>
-                        <button class="btn btn-primary" id="bpaBtn" {% if not bpa_configured %}disabled title="BPA not configured"{% endif %}>
+                        <button class="btn btn-primary" id="bpaBtn" {% if not bpa_configured %}disabled
+                            title="BPA not configured" {% endif %}>
                             <span>🚀 Submit to BPA</span>
                         </button>
                     </div>
@@ -150,4 +157,5 @@
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>
