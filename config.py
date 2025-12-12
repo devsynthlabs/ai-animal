@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class Config:
     """Application configuration."""
@@ -8,7 +12,7 @@ class Config:
     
     # Gemini API
     GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
-    GEMINI_MODEL = 'gemini-2.0-flash'
+    GEMINI_MODEL = 'gemini-2.5-flash'
     
     # File Upload
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
